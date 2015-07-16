@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web 
+  Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+	<servlet>
+    	<servlet-name>OnceUpdate</servlet-name>
+    	<servlet-class>exTwitter.OnceUpdate</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>OnceUpdate</servlet-name>
+    	<url-pattern>/OnceUpdate</url-pattern>
+    </servlet-mapping>	
+    <servlet>
+    	<servlet-name>Once</servlet-name>
+    	<servlet-class>exTwitter.Once</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>Once</servlet-name>
+    	<url-pattern>/Once</url-pattern>
+    </servlet-mapping>
+    
+</web-app>

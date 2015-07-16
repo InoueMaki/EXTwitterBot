@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="exTwitter.OnceBean"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.lang.*"%>
 
 <html>
 	<% Calendar cal = Calendar.getInstance();
@@ -11,7 +12,18 @@
   		int now_day = cal.get(Calendar.DATE);
   		int now_hour = cal.get(Calendar.HOUR_OF_DAY);
   		now_minute = cal.get(Calendar.MINUTE);
+  		
+  		Integer cont = (Integer)session.getAttribute("contribution");
+  		session.setAttribute("contribution",0);
+  		int contInt;
+  		if(cont == null){
+  			contInt = 0;
+  		}
+  		else{
+  			contInt = cont.intValue();
+  		}
 	%>
+	
 	<link rel="stylesheet" type="text/css" href="style.css">
 	
 	<head>
@@ -45,7 +57,7 @@
 					<div id="select_t">
 						<br>
 						日付指定
-						<% out.println("<input type=\"date\" style=\"width:70px;height:30;font-size:20\" name=\"year\" require max=2020 min=2015 value="+ now_year +" step=1>年</input>"); %>
+						<% out.println("<input type=\"number\" style=\"width:70px;height:30;font-size:20\" name=\"year\" require max=2020 min=2015 value="+ now_year +" step=1>年</input>"); %>
 						<% out.println("<input type=\"number\" style=\"width:50px;height:30;font-size:20\" name=\"month\" require max=12 min=1 value="+ now_month +" step=1>月</input>"); %>
 						<% out.println("<input type=\"number\" style=\"width:50px;height:30;font-size:20\" name=\"day\" require max=31 min=1 value="+ now_day +" step=1>日</input>"); %>
 						<br><br>
@@ -74,7 +86,12 @@
 		}
 		
 		function disp(){
+			<% out.print( "var contInt = " + contInt + ";" ); %>
 			document.getElementById('select_t').style.display = "none";
+			var checkbox = document.getElementById("chk1");
+			checkbox.checked = false;
+			if(contInt == 1)	window.confirm('ツイート登録完了');
+			else if(contInt == -1) window.confirm('ツイート登録失敗');
 		}
 		
 		function twbtn(){
