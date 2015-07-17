@@ -2,12 +2,11 @@ package exTwitter;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-//テーブル名onceのデータを１つ格納しておくクラス
 public class OnceBean {
 	
-	//フィールド
 	private int once_id;
 	private String text;
 	private Calendar reserve_time;
@@ -36,19 +35,29 @@ public class OnceBean {
 		this.posted = posted;
 	}
 	
-	int getOnceId(){
+	public int getOnceId(){
 		return once_id;
 	}
 	
-	String getText(){
+	public String getText(){
 		return text;
 	}
 	
-	Calendar getReserveTime(){
+	public Calendar getReserveTime(){
 		return reserve_time;
 	}
 	
-	int getPosted(){
+	public String getDate(){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		return sdf.format(reserve_time.getTime());
+	}
+	
+	public String getTime(){
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		return sdf.format(reserve_time.getTime());
+	}
+	
+	public int getPosted(){
 		return posted;
 	}
 }

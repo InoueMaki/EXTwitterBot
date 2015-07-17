@@ -1,4 +1,4 @@
-﻿package exTwitter;
+package exTwitter;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -30,21 +30,19 @@ public class OnceUpdate extends HttpServlet {
 			dispatch.forward(request , response);
 			return;
 			}
-		
-		response.setContentType("text/html;charset=Shift_JIS");
+		request.setCharacterEncoding("UTF-8");
 
 		String text = request.getParameter("text");
 		String check[] = request.getParameterValues("chk1");
+		
 		int once_id = selectDB(qry1);
 		
 		if(once_id == -1){
-			System.out.println("select error2");
 			session.setAttribute("contribution", -1);
 			response.sendRedirect("OnceUI.jsp");
 			return;
 		}else{
 			if(updateDB(qry2) == false){
-				System.out.println("numbering add error");
 				session.setAttribute("contribution", -1);
 				response.sendRedirect("OnceUI.jsp");
 				return;
@@ -64,7 +62,7 @@ public class OnceUpdate extends HttpServlet {
 		}
 		else{
 	        Date date = new Date();
-	        SimpleDateFormat sdf1 = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
+	        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		    System.out.println(sdf1.format(date));
 			qry = new String("insert into once values (" + once_id + ", '" + text + "' , '" + sdf1.format(date) + "' , " + 0 + " ); ");
 			System.out.println(qry);
@@ -75,13 +73,12 @@ public class OnceUpdate extends HttpServlet {
 			session.setAttribute("onceList", Once.onceList);
 			session.setAttribute("arrCount", Once.arrCount);
 			session.setAttribute("contribution", 1);
-			System.out.println("ok");
+			response.sendRedirect("Once");
 		}
 		else{
 			session.setAttribute("contribution", -1);
-			System.out.println("ng");
+			response.sendRedirect("OnceUI.jsp");
 		}
-		response.sendRedirect("OnceUI.jsp");
 	}
 
 	private boolean updateDB(String qry){

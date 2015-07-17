@@ -1,10 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="exTwitter.OnceBean"%>
-<%@ page import="java.util.*"%>
-<%@ page import="java.lang.*"%>
+<%@ page import="exTwitter.Once"%>
+<%@ page import="java.util.Calendar"%>
+<%@ page import="java.lang.Integer"%>
+<%@page import="java.util.ArrayList"%>
 
 <html>
-	<% Calendar cal = Calendar.getInstance();
+	<%	
+		Calendar cal = Calendar.getInstance();
 		int now_minute = cal.get(Calendar.MINUTE);
 		cal.add(Calendar.MINUTE,+5-(now_minute%5));
 		int now_year = cal.get(Calendar.YEAR);
@@ -32,7 +35,7 @@
 
 	<body>
 
-		<jsp:include page="header.jsp" />
+	<jsp:include page="header.jsp" />
 		
 	<!-- タイトル -->
 		<div id="a">
@@ -45,7 +48,7 @@
 				<center>
 					
 				<!-- ツイートのタイトルと本文の入力フォーム -->
-					<textarea name="text" style="width:400px;height:200px;resize:none;font-size:22" maxlength="140" placeholder="ツイートを入力してね"></textarea><br>
+					<textarea name="text" style="width:400px;height:200px;resize:none;font-size:22" maxlength="140" placeholder="ツイートを入力してね" required></textarea><br>
 				<!-- ツイート終わり -->
 				<!-- 日付指定チェックボックス -->
 					<dev id="check">
@@ -67,10 +70,41 @@
 					</div>
 					<!--日時ここまで-->
 				<br>
-				<dev id="botton">
+				<div id="botton">
 					<input type="submit" style="width:100px;height:40px;font-size:20" value="ツイート">
-				</dev>
+				</div>
+			</form>
+			<br>
+			<br>
+			<div Align="left">登録されている時間指定ツイート一覧</div>
+			<div align="right">
+				<form method="post" action="OnceDelUI.jsp">
+					<input type="submit" style="width:120px;height:40px;font-size:20" value="削除画面へ">
 				</form>
+			</div>
+			<center>
+				<!--テーブル-->
+				<table border="2" style="font-size:20">
+					<tr>
+						<th>　ツイート　</th>
+						<th>　予約日　</th>
+						<th>　予約時間　</th>
+					</tr>
+					
+					<%
+						if(Once.onceList != null){
+							for(int i=0;i<Once.onceList.size();i++){
+								out.print("<tr>");
+								out.print("<td align=\"center\">" + Once.onceList.get(i).getText() + "</td>");
+								out.print("<td align=\"center\">" + Once.onceList.get(i).getDate() + "</td>");
+								out.print("<td align=\"center\">" + Once.onceList.get(i).getTime() + "</td>");
+								out.print("</tr>");
+							}
+						}
+					%>
+				
+				</table><!--テーブル終わり-->
+			</center>			
 		</div>
 	
 	<!-- 以下、javascript -->
@@ -90,8 +124,8 @@
 			document.getElementById('select_t').style.display = "none";
 			var checkbox = document.getElementById("chk1");
 			checkbox.checked = false;
-			if(contInt == 1)	window.confirm('ツイート登録完了');
-			else if(contInt == -1) window.confirm('ツイート登録失敗');
+			if(contInt == 1)	window.alert('ツイート登録完了');
+			else if(contInt == -1) window.alert('ツイート登録失敗');
 		}
 		
 		function twbtn(){

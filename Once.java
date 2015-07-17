@@ -13,37 +13,33 @@ import javax.servlet.http.*;
 public class Once extends HttpServlet {
 	
 	private static final String qry = "select * from once;";
-	static ArrayList<OnceBean> onceList = new ArrayList<OnceBean>();
+	public static ArrayList<OnceBean> onceList;
 	static int arrCount;
 	
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 
 		HttpSession session = request.getSession(false);
-
 		if(session == null){
-			RequestDispatcher dispatch = request.getRequestDispatcher("/control");
-			dispatch.forward(request , response);
+			response.sendRedirect("control");
+			return;
 		}
-		
-		addOnceList();
-		
-		if(arrCount >= 0)	session.setAttribute("onceList", onceList);
-		session.setAttribute("arrCount", new Integer(arrCount));
-		
-		RequestDispatcher dispatch = request.getRequestDispatcher("/onceUI.jsp");
-		dispatch.forward(request , response);
-
+		else{
+			addOnceList();
+			response.sendRedirect("OnceUI.jsp");
+			return;
+		}
 	}
 	
 	static void addOnceList(){
 		try {
-			arrCount=0;
+			onceList = new ArrayList<OnceBean>();
+			arrCount = 0;
 			DBManager DBM = new DBManager();
 			DBM.getConnection();
 			ResultSet rs = DBM.getResultSet(qry);
-			OnceBean data = new OnceBean();	
 			
 			while(rs.next()){
+				OnceBean data = new OnceBean();	
 				data.setOnceId(rs.getInt("once_id"));
 				data.setReserveTime(rs.getTimestamp("reserve_time"));
 				data.setPosted(rs.getInt("posted"));
@@ -51,7 +47,6 @@ public class Once extends HttpServlet {
 				onceList.add(data);
 				arrCount++;
 			}
-			
 			DBM.closeConnection();	
 	
 		}catch(Exception e){
