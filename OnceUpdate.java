@@ -2,12 +2,8 @@ package exTwitter;
 
 import java.io.IOException;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,62 +19,38 @@ public class OnceUpdate extends HttpServlet {
 	private final String qry2 = "update numbering set once_id = once_id + 1" ;	//採番TBLの更新
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-		
+
+		System.out.println("onceUpdateが呼ばれた");
 		HttpSession session = request.getSession(false);
+		request.setCharacterEncoding("UTF-8");
+		RequestDispatcher dispatch = request.getRequestDispatcher("Control");
+
 		if(session == null){
-			RequestDispatcher dispatch = request.getRequestDispatcher("/control");
 			dispatch.forward(request , response);
 			return;
-			}
-		request.setCharacterEncoding("UTF-8");
+		}
 
-		String text = request.getParameter("text");
-		String check[] = request.getParameterValues("chk1");
-		
+		String check[] = request.getParameterValues("chk1");		
 		int once_id = selectDB(qry1);
+		request.setAttribute("単発",1);
 		
 		if(once_id == -1){
 			session.setAttribute("contribution", -1);
-			response.sendRedirect("OnceUI.jsp");
+			dispatch.forward(request , response);
 			return;
 		}else{
 			if(updateDB(qry2) == false){
 				session.setAttribute("contribution", -1);
-				response.sendRedirect("OnceUI.jsp");
+				dispatch.forward(request , response);
 				return;
 			}
 		}
 		
-		if(check!=null){
-			String year = request.getParameter("year");
-			String month = request.getParameter("month");
-			String day = request.getParameter("day");
-			String hour = request.getParameter("hour");
-			String minute = request.getParameter("minute");
-			
-			String reserve_time = year + "-" + month + "-" + day +" " + hour + ":" + minute + ":00";
-			qry = new String("insert into once values (" +once_id + ", '" + text + "', '" + reserve_time + "', " + 0 + " ); ");
-			System.out.println(qry);
-		}
-		else{
-	        Date date = new Date();
-	        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		    System.out.println(sdf1.format(date));
-			qry = new String("insert into once values (" + once_id + ", '" + text + "' , '" + sdf1.format(date) + "' , " + 0 + " ); ");
-			System.out.println(qry);
-		}
+		qry = createQry(request , check, once_id);
 		
-		if(updateDB(qry)){
-			Once.addOnceList();
-			session.setAttribute("onceList", Once.onceList);
-			session.setAttribute("arrCount", Once.arrCount);
-			session.setAttribute("contribution", 1);
-			response.sendRedirect("Once");
-		}
-		else{
-			session.setAttribute("contribution", -1);
-			response.sendRedirect("OnceUI.jsp");
-		}
+		if(updateDB(qry))	session.setAttribute("contribution", 1);
+		else	session.setAttribute("contribution", -1);
+		dispatch.forward(request, response);
 	}
 
 	private boolean updateDB(String qry){
@@ -110,5 +82,29 @@ public class OnceUpdate extends HttpServlet {
 			System.err.println("select_error");
 		}
 		return once_id;
+	}
+	
+	private String createQry(HttpServletRequest request,String[] check, int once_id){
+		String qry;
+		String text = request.getParameter("text");
+		if(check!=null){
+			String year = request.getParameter("year");
+			String month = request.getParameter("month");
+			String day = request.getParameter("day");
+			String hour = request.getParameter("hour");
+			String minute = request.getParameter("minute");
+			
+			String reserve_time = year + "-" + month + "-" + day +" " + hour + ":" + minute + ":00";
+			qry = new String("insert into once values (" + once_id + ", '" + text + "', '" + reserve_time + "', " + 0 + " ); ");
+			System.out.println(qry);
+		}
+		else{
+	        Date date = new Date();
+	        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		    System.out.println(sdf1.format(date));
+			qry = new String("insert into once values (" + once_id + ", '" + text + "' , '" + sdf1.format(date) + "' , " + 0 + " ); ");
+			System.out.println(qry);
+		}
+		return qry;
 	}
 }

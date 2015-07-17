@@ -78,8 +78,8 @@
 			<br>
 			<div Align="left">登録されている時間指定ツイート一覧</div>
 			<div align="right">
-				<form method="post" action="OnceDelUI.jsp">
-					<input type="submit" style="width:120px;height:40px;font-size:20" value="削除画面へ">
+				<form method="post" action="Control">
+					<input type="submit" style="width:120px;height:40px;font-size:20" name="単発削除" value="削除画面へ">
 				</form>
 			</div>
 			<center>

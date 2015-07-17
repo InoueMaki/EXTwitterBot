@@ -3,30 +3,44 @@ package exTwitter;
 import java.io.*;
 //import java.sql.Date;
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 public class Once extends HttpServlet {
 	
-	private static final String qry = "select * from once;";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final String qry = "select * from once where posted = 0;";
 	public static ArrayList<OnceBean> onceList;
 	static int arrCount;
 	
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+		System.out.println("onceが呼ばれた");
 		HttpSession session = request.getSession(false);
 		if(session == null){
-			response.sendRedirect("control");
+			response.sendRedirect("Control");
 			return;
 		}
 		else{
 			addOnceList();
-			response.sendRedirect("OnceUI.jsp");
-			return;
+			String URL = (String) request.getAttribute("onceURL");
+			if(URL == null){
+				response.sendRedirect("OnceUI.jsp");
+				return;
+			}
+			else if(URL.equals("OnceUI.jsp")){
+				System.out.println(URL);
+				response.sendRedirect(URL);
+				return;
+			}
+			else{
+				System.out.println(URL);
+				response.sendRedirect(URL);
+				return;
+			}
 		}
 	}
 	

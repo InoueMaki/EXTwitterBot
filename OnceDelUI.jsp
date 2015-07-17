@@ -42,8 +42,8 @@
 				</table>
 			</form>
 			<br>
-			<form method="get" action="Once">
-				<input type="submit" style="width:100px;height:40px;font-size:20" value="戻る">
+			<form method="post" action="Control">
+				<input type="submit" style="width:100px;height:40px;font-size:20" name="単発" value="戻る">
 			</form>
 		</center>
 	</div>
